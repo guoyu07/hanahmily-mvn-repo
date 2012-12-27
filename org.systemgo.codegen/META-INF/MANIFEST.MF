@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Codegen
+Bundle-SymbolicName: org.systemgo.codegen;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.systemgo.codegen.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.8.1"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: 
+ org.apache.commons.lang;version="2.6.0"
+Bundle-ClassPath: lib/commons-dbutils-1.5.jar,
+ .,
+ lib/ojdbc14.jar

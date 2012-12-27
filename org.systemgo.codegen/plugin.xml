@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Codegen"
+            id="org.systemgo.codegen">
+      </category>
+      <view
+            name="DatabaseView"
+            icon="icons/sample.gif"
+            category="org.systemgo.codegen"
+            class="org.systemgo.codegen.views.DatabaseView"
+            id="org.systemgo.codegen.views.DatabaseView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="1"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="org.systemgo.codegen.views.DatabaseView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+</plugin>
