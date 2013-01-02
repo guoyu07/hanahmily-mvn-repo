@@ -52,7 +52,7 @@ public class ConfigFile {
 		}
 		// º”‘ÿ≈‰÷√ ˝æ›
 		File[] files = directroy.listFiles();
-		config = new TreeMap<>();
+		config = new TreeMap<String,File>();
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			config.put(file.getName(), file);
