@@ -1,36 +1,39 @@
 package org.systemgo.codegen.dialog;
 
+import org.eclipse.core.internal.resources.Folder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-import org.eclipse.ui.internal.dialogs.WorkingSetSelectionDialog;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ConfigGenInfoPage extends WizardPage {
-	private Text text;
-	private Text text_1;
+	protected Text voPathText;
+	protected Text daoPathText;
 	private Button selectVoPathBtn;
 	private Button selectDaoPathBtn;
+	private Label voErrMsg;
+	private Label daoErrMsg;
+	private Button btndao;
 
 	/**
 	 * Create the wizard.
 	 */
 	public ConfigGenInfoPage() {
 		super("wizardPage");
-		setTitle("Wizard Page title");
-		setDescription("Wizard Page description");
+		setTitle("\u751F\u6210\u4EE3\u7801\u76EE\u5F55\u9009\u62E9");
+		setDescription("\u9009\u62E9vo\u548Cdao\u7684\u751F\u6210\u76EE\u5F55\uFF0C\u4EE5\u53CA\u76F8\u5173\u914D\u7F6E\u4FE1\u606F\n");
 	}
 
 	/**
@@ -60,11 +63,16 @@ public class ConfigGenInfoPage extends WizardPage {
 		label.setLayoutData(gd_label);
 		label.setText("\u751F\u6210\u76EE\u5F55\uFF1A");
 
-		text = new Text(grpVo, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		voPathText = new Text(grpVo, SWT.BORDER);
+		voPathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		selectVoPathBtn = new Button(grpVo, SWT.NONE);
 		selectVoPathBtn.setText("\u9009\u62E9");
+		new Label(grpVo, SWT.NONE);
+
+		voErrMsg = new Label(grpVo, SWT.NONE);
+		voErrMsg.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		new Label(grpVo, SWT.NONE);
 
 		Button button_2 = new Button(grpVo, SWT.CHECK);
 		button_2.setText("\u751F\u6210\u6570\u5B57\u7C7B\u578B");
@@ -87,14 +95,19 @@ public class ConfigGenInfoPage extends WizardPage {
 		label_1.setLayoutData(gd_label_1);
 		label_1.setText("\u751F\u6210\u76EE\u5F55\uFF1A");
 
-		text_1 = new Text(grpDao, SWT.BORDER);
-		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+		daoPathText = new Text(grpDao, SWT.BORDER);
+		daoPathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
 
 		selectDaoPathBtn = new Button(grpDao, SWT.NONE);
 		selectDaoPathBtn.setText("\u9009\u62E9");
+		new Label(grpDao, SWT.NONE);
 
-		Button btndao = new Button(grpDao, SWT.CHECK);
+		daoErrMsg = new Label(grpDao, SWT.NONE);
+		daoErrMsg.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
+		new Label(grpDao, SWT.NONE);
+
+		btndao = new Button(grpDao, SWT.CHECK);
 		btndao.setSelection(true);
 		btndao.setText("\u751F\u6210DAO");
 		new Label(grpDao, SWT.NONE);
@@ -108,7 +121,7 @@ public class ConfigGenInfoPage extends WizardPage {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-				ConfigGenInfoPage.this.selectPathEvent();
+				ConfigGenInfoPage.this.selectPathEvent(voPathText, voErrMsg);
 			}
 
 			@Override
@@ -123,15 +136,72 @@ public class ConfigGenInfoPage extends WizardPage {
 
 			}
 		});
+		selectDaoPathBtn.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				ConfigGenInfoPage.this.selectPathEvent(daoPathText, daoErrMsg);
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		btndao.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				if(btndao.getSelection()){
+					daoPathText.setEnabled(true);
+					daoPathText.setEditable(true);
+					selectDaoPathBtn.setEnabled(true);
+				}else{
+					daoPathText.setEnabled(false);
+					daoPathText.setEditable(false);
+					selectDaoPathBtn.setEnabled(false);
+				}
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
 	}
 
-	private void selectPathEvent() {
+	private void selectPathEvent(Text text, Label errMsg) {
 		
+		errMsg.setText("");
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
 				this.getShell(), new WorkbenchLabelProvider(),
 				new BaseWorkbenchContentProvider());
 		dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
-		dialog.open();
-		Object firstResult = dialog.getFirstResult();
+		if (ElementTreeSelectionDialog.OK == dialog.open()) {
+			Object firstResult = dialog.getFirstResult();
+			if (firstResult instanceof Folder) {
+				Folder folder = (Folder) firstResult;
+				text.setText(folder.getFullPath().toString());
+			} else {
+				errMsg.setText("aaa请选择正确的生成目录");
+			}
+
+		}
 	}
 }

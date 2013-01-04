@@ -20,6 +20,9 @@ public class GenCodeWizard extends Wizard {
 
 	@Override
 	public boolean performFinish() {
+		
+		configGenInfoPage.voPathText.getText();
+		configGenInfoPage.daoPathText.getText();
 		return false;
 	}
 	

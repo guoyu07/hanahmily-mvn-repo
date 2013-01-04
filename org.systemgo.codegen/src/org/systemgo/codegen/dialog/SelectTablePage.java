@@ -6,8 +6,12 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -30,8 +34,8 @@ public class SelectTablePage extends WizardPage {
 	 */
 	public SelectTablePage() {
 		super("wizardPage");
-		setTitle("Wizard Page title");
-		setDescription("Wizard Page description");
+		setTitle("\u9009\u62E9\u8868");
+		setDescription("\u67E5\u8BE2\u5E76\u9009\u62E9\u9700\u8981\u751F\u6210\u7684\u8868\uFF0C\u67E5\u8BE2\u4E0D\u533A\u5206\u5927\u5C0F\u5199");
 	}
 
 	/**
@@ -97,6 +101,16 @@ public class SelectTablePage extends WizardPage {
 			}
 		});
 		
+		text.addTraverseListener(new TraverseListener() {
+			
+			@Override
+			public void keyTraversed(TraverseEvent e) {
+				if(e.detail == SWT.TRAVERSE_RETURN){
+					SelectTablePage.this.searchEvent();
+				}
+			}
+		});
+		
 		table.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -149,6 +163,11 @@ public class SelectTablePage extends WizardPage {
 		}else{
 			return true;
 		}
+	}
+
+	@Override
+	public boolean canFlipToNextPage() {
+		return isPageComplete();
 	}
 	
 	
