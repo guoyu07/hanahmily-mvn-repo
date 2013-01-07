@@ -1,0 +1,59 @@
+## template for vo
+package com.cattsoft.gms.bss.data.svo;
+
+import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
+import com.cattsoft.mscrm.data.GenericVO;
+import com.cattsoft.mscrm.data.KeyValueBean;
+
+
+#set ($lowertablename = $nameconverter.convert($tablename))
+#set ($uppertablename = $nameconverter.setUpperCaseForFirstLetter($lowertablename))
+public class ${uppertablename}SVO extends GenericVO{
+	private static final long serialVersionUID = 1L;
+	
+	public static final String TABLE_NAME = "$tablename";
+
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+	private $column.type $lower;
+
+#end
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+	public void set${upper}(${column.type} ${lower}) {
+		this.${lower} = ${lower};
+	}
+	
+	public ${column.type} get${upper}() {
+		return ${lower};
+	}
+
+#end
+
+	public List<KeyValueBean> getPks(){
+		List<KeyValueBean> beanList = new ArrayList<KeyValueBean>();
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ($column.isPk())
+		beanList.add(new KeyValueBean("$column.name", this.get${upper}()));
+#end
+#end
+		return beanList;
+	}
+	
+#if ($isLog.equals("Y"))	
+#set ($lowerdatatablename = $nameconverter.convert($dataTableName))
+#set ($upperdatatablename = $nameconverter.setUpperCaseForFirstLetter($lowerdatatablename))
+	public void convertToLog(${upperdatatablename}SVO ${lowerdatatablename}SVO){
+#foreach ($column in $dataColumns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+		this.set${upper}(${lowerdatatablename}SVO.get${upper}());
+#end
+	}
+#end
+}

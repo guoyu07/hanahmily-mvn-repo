@@ -1,7 +1,9 @@
 package org.systemgo.codegen.dialog;
 
-import org.eclipse.core.internal.resources.Folder;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -13,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -25,7 +28,7 @@ public class ConfigGenInfoPage extends WizardPage {
 	private Button selectDaoPathBtn;
 	private Label voErrMsg;
 	private Label daoErrMsg;
-	private Button btndao;
+	protected Button isNumbericBtn;
 
 	/**
 	 * Create the wizard.
@@ -74,8 +77,8 @@ public class ConfigGenInfoPage extends WizardPage {
 		voErrMsg.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		new Label(grpVo, SWT.NONE);
 
-		Button button_2 = new Button(grpVo, SWT.CHECK);
-		button_2.setText("\u751F\u6210\u6570\u5B57\u7C7B\u578B");
+		isNumbericBtn = new Button(grpVo, SWT.CHECK);
+		isNumbericBtn.setText("\u751F\u6210\u6570\u5B57\u7C7B\u578B");
 		new Label(grpVo, SWT.NONE);
 		new Label(grpVo, SWT.NONE);
 
@@ -107,9 +110,7 @@ public class ConfigGenInfoPage extends WizardPage {
 		daoErrMsg.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
 		new Label(grpDao, SWT.NONE);
 
-		btndao = new Button(grpDao, SWT.CHECK);
-		btndao.setSelection(true);
-		btndao.setText("\u751F\u6210DAO");
+		new Label(grpDao, SWT.NONE);
 		new Label(grpDao, SWT.NONE);
 		new Label(grpDao, SWT.NONE);
 
@@ -156,38 +157,9 @@ public class ConfigGenInfoPage extends WizardPage {
 			}
 		});
 		
-		btndao.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseUp(MouseEvent e) {
-				if(btndao.getSelection()){
-					daoPathText.setEnabled(true);
-					daoPathText.setEditable(true);
-					selectDaoPathBtn.setEnabled(true);
-				}else{
-					daoPathText.setEnabled(false);
-					daoPathText.setEditable(false);
-					selectDaoPathBtn.setEnabled(false);
-				}
-			}
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-		
 	}
 
 	private void selectPathEvent(Text text, Label errMsg) {
-		
 		errMsg.setText("");
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
 				this.getShell(), new WorkbenchLabelProvider(),
@@ -195,8 +167,8 @@ public class ConfigGenInfoPage extends WizardPage {
 		dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
 		if (ElementTreeSelectionDialog.OK == dialog.open()) {
 			Object firstResult = dialog.getFirstResult();
-			if (firstResult instanceof Folder) {
-				Folder folder = (Folder) firstResult;
+			if (firstResult instanceof IFolder) {
+				IFolder folder = (IFolder) firstResult;
 				text.setText(folder.getFullPath().toString());
 			} else {
 				errMsg.setText("aaa请选择正确的生成目录");

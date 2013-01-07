@@ -3,11 +3,8 @@ package org.systemgo.codegen.dialog;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.TraverseEvent;
@@ -28,6 +25,7 @@ public class SelectTablePage extends WizardPage {
 	private Table table;
 	private Button button;
 	private Label errMsg;
+	private TableColumn tableColumn_2;
 
 	/**
 	 * Create the wizard.
@@ -58,7 +56,7 @@ public class SelectTablePage extends WizardPage {
 		button.setText("\u67E5\u8BE2");
 		new Label(container, SWT.NONE);
 
-		table = new Table(container, SWT.BORDER | SWT.FULL_SELECTION);
+		table = new Table(container, SWT.BORDER | SWT.MULTI);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -165,11 +163,9 @@ public class SelectTablePage extends WizardPage {
 		}
 	}
 
-	@Override
-	public boolean canFlipToNextPage() {
-		return isPageComplete();
+	public String getSelectTableName(){
+		return table.getSelection()[0].getText(0);
 	}
-	
 	
 	
 }

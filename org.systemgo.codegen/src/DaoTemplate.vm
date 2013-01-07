@@ -1,0 +1,266 @@
+## template for dao
+package com.cattsoft.gms.bss.dao;
+
+import java.sql.*;
+import java.util.*;
+
+import com.cattsoft.mscrm.common.intercall.defaultImpl.AppException;
+import com.cattsoft.mscrm.common.intercall.defaultImpl.SysException;
+import com.cattsoft.mscrm.common.util.SqlStatement;
+import com.cattsoft.mscrm.common.util.StringUtil;
+import com.cattsoft.gms.bss.data.svo.*;
+
+#set ($lowertablename = $nameconverter.convert($tablename))
+#set ($uppertablename = $nameconverter.setUpperCaseForFirstLetter($lowertablename))
+public class ${uppertablename}SDAO {
+
+	public void add(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {
+		SqlStatement sql = new SqlStatement();
+		sql.appendSql("insert into");
+		sql.appendSql(" ${tablename}${insertsql}");
+		try {
+			int index = 1;
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ("n" == $isNumeric)
+			sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#elseif ($column.numeric)
+			sql.setLong(index++, ${lowertablename}.get${upper}());
+#else
+			sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#end
+#end
+			sql.execute();
+		} catch (SQLException e) {
+			throw new SysException("add error..", e);
+		}
+	}
+
+	public void update(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {
+		SqlStatement sql = new SqlStatement();
+		sql.appendSql("update ${tablename} set");
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if (!$column.isPk())
+#if ("Timestamp" == ${column.type})
+		if (${lowertablename}.get${upper}() != null) {
+#else
+		if (${lowertablename}.get${upper}() != null) {
+#end
+			sql.appendSql(" ${column.name}=?,");
+		}
+#end
+#end
+		sql.removeSuffix(1);
+		sql.appendSql(" where 1=1");
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ($column.isPk())
+		sql.appendSql(" and ${column.name}=?");
+#end
+#end
+		try {
+			int index = 1;
+#foreach ($column in $columns)
+#if (!$column.pk)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+			if (${lowertablename}.get${upper}() != null) {
+#if ("n" == $isNumeric)
+				sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#elseif ($column.numeric)
+				sql.setLong(index++, ${lowertablename}.get${upper}());
+#else
+				sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#end
+			}
+#end
+#end
+#foreach ($column in $columns)
+#if ($column.pk)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ("n" == $isNumeric)
+			sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#elseif ($column.numeric)
+			sql.setLong(index++, ${lowertablename}.get${upper}());
+#else
+			sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#end
+#end
+#end
+			sql.execute();
+		} catch (SQLException e) {
+			throw new SysException("update error..", e);
+		} 
+	}
+
+	public void delete(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {
+		SqlStatement sql = new SqlStatement();
+		sql.appendSql("delete from ${tablename} where 1=1");
+#foreach ($column in $columns)
+#if ($column.pk)
+		sql.appendSql(" and ${column.name}=?");
+#end
+#end
+		try {
+#set ($index = 1)
+#foreach ($column in $columns)
+#if ($column.pk)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ("n" == $isNumeric)
+			sql.set${column.type}(${index}, ${lowertablename}.get${upper}());
+#elseif ($column.numeric)
+			sql.setLong(${index}, ${lowertablename}.get${upper}());
+#else
+			sql.set${column.type}(${index}, ${lowertablename}.get${upper}());
+#end
+#set ($index = $index + 1)
+#end
+#end
+			sql.execute();
+		} catch (SQLException e) {
+			throw new SysException("delete error..", e);
+		} 
+	}
+
+	public ${uppertablename}SVO findByPK(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {
+		${uppertablename}SVO result = null;
+		SqlStatement sql = new SqlStatement();
+		sql.appendSql("select");
+		sql.appendSql(" ${selectsql}");
+		sql.appendSql(" from ${tablename} a where 1=1");
+#foreach ($column in $columns)
+#if ($column.pk)
+		sql.appendSql(" and ${column.name}=?");
+#end
+#end
+		ResultSet rs = null;
+		try {
+#set ($index = 1)
+#foreach ($column in $columns)
+#if ($column.pk)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ("n" == $isNumeric)
+			sql.set${column.type}(${index}, ${lowertablename}.get${upper}());
+#elseif ($column.numeric)
+			sql.setLong(${index}, ${lowertablename}.get${upper}());
+#else
+			sql.set${column.type}(${index}, ${lowertablename}.get${upper}());
+#end
+#set ($index = $index + 1)
+#end
+#end
+			rs = sql.executeQuery();
+			result = this.convertToVO(rs);
+		} catch (SQLException e) {
+			throw new SysException("findByPK error..", e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				sql.closeStatement();
+			} catch (SQLException e) {
+			}
+		}
+		return result;
+	}
+
+	public List<${uppertablename}SVO> findByVO(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {
+		SqlStatement sql = new SqlStatement();
+		sql.appendSql("select");
+		sql.appendSql(" ${selectsql}");
+		sql.appendSql(" from ${tablename} a where 1=1");
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ("Timestamp" == ${column.type})
+		if (${lowertablename}.get${upper}() != null) {
+#else
+		if (!StringUtil.isBlank(${lowertablename}.get${upper}())) {
+#end
+			sql.appendSql(" and ${column.name}=?");
+		}
+#end
+		ResultSet rs = null;
+		try {
+			int index = 1;
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ("Timestamp" == ${column.type})
+			if (${lowertablename}.get${upper}() != null) {
+#else
+			if (!StringUtil.isBlank(${lowertablename}.get${upper}())) {
+#end
+#if ("n" == $isNumeric)
+				sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#elseif ($column.numeric)
+				sql.setLong(index++, ${lowertablename}.get${upper}());
+#else
+				sql.set${column.type}(index++, ${lowertablename}.get${upper}());
+#end
+			}
+#end
+			rs = sql.executeQuery();
+			return this.convertToList(rs);
+		} catch (SQLException e) {
+			throw new SysException("findByVO error..", e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				sql.closeStatement();
+			} catch (SQLException e) {
+			}
+		}
+	}
+
+
+	private void convert(${uppertablename}SVO vo, ResultSet rs) throws SysException {
+		try {
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+			vo.set${upper}(rs.get${column.type}("${column.name}"));
+#end
+		} catch (SQLException e) {
+			throw new SysException("JDBC Exception", e);
+		}
+	}
+	
+	private ${uppertablename}SVO convertToVO(ResultSet rs) throws SysException {
+		${uppertablename}SVO vo = null;
+		try {
+			if (rs.next()) {
+				vo = new ${uppertablename}SVO();
+				this.convert(vo, rs);
+			}
+		} catch (SQLException e) {
+			throw new SysException("JDBC Exception", e);
+		}
+		return vo;
+	}
+	
+	private List<${uppertablename}SVO> convertToList(ResultSet rs) throws SysException {
+		List<${uppertablename}SVO> list = new ArrayList<${uppertablename}SVO>();
+		try {
+			while (rs.next()) {
+				${uppertablename}SVO vo = new ${uppertablename}SVO();
+				this.convert(vo, rs);
+				list.add(vo);
+			}
+		} catch (SQLException e) {
+			throw new SysException("JDBC Exception", e);
+		}
+		return list.size() == 0 ? null : list;
+	}
+
+}
