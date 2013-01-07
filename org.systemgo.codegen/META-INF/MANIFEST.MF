@@ -15,4 +15,6 @@ Import-Package:
  org.apache.commons.lang;version="2.6.0"
 Bundle-ClassPath: lib/commons-dbutils-1.5.jar,
  .,
- lib/ojdbc14.jar
+ lib/ojdbc14.jar,
+ lib/velocity-1.5.jar,
+ lib/velocity-dep-1.5.jar

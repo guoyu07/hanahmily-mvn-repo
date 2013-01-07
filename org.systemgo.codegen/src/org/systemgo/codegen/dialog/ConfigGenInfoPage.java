@@ -1,8 +1,12 @@
 package org.systemgo.codegen.dialog;
 
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;

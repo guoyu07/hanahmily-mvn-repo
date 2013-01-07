@@ -92,7 +92,7 @@ public class CodeGenerator {
 					new FileWriter(
 							new File(
 									config.get("outputpath")
-											+ config.getProperty("rootpackage")
+											+ config.getProperty("daopackage")
 											+ converter
 													.setUpperCaseForFirstLetter(converter
 															.convert((String) context
