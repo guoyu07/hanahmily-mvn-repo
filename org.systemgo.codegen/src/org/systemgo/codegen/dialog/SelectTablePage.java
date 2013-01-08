@@ -177,12 +177,11 @@ public class SelectTablePage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-//		if (table.getItemCount() < 1) {
-//			return false;
-//		} else {
-//			return true;
-//		}
-		return true;
+		if (table.getItemCount() < 1) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	public String getSelectTableName() {
