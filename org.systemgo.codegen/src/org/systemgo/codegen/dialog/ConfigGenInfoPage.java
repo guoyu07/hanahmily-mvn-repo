@@ -1,13 +1,14 @@
 package org.systemgo.codegen.dialog;
 
-import org.eclipse.core.internal.resources.Workspace;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -19,10 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
-import org.eclipse.ui.model.BaseWorkbenchContentProvider;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ConfigGenInfoPage extends WizardPage {
@@ -71,7 +69,8 @@ public class ConfigGenInfoPage extends WizardPage {
 		label.setText("\u751F\u6210\u76EE\u5F55\uFF1A");
 
 		voPathText = new Text(grpVo, SWT.BORDER);
-		voPathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		voPathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 
 		selectVoPathBtn = new Button(grpVo, SWT.NONE);
 		selectVoPathBtn.setText("\u9009\u62E9");
@@ -103,8 +102,8 @@ public class ConfigGenInfoPage extends WizardPage {
 		label_1.setText("\u751F\u6210\u76EE\u5F55\uFF1A");
 
 		daoPathText = new Text(grpDao, SWT.BORDER);
-		daoPathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
+		daoPathText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 
 		selectDaoPathBtn = new Button(grpDao, SWT.NONE);
 		selectDaoPathBtn.setText("\u9009\u62E9");
@@ -160,24 +159,30 @@ public class ConfigGenInfoPage extends WizardPage {
 
 			}
 		});
-		
+
 	}
 
 	private void selectPathEvent(Text text, Label errMsg) {
-		errMsg.setText("");
-		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(
-				this.getShell(), new WorkbenchLabelProvider(),
-				new BaseWorkbenchContentProvider());
-		dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
-		if (ElementTreeSelectionDialog.OK == dialog.open()) {
-			Object firstResult = dialog.getFirstResult();
-			if (firstResult instanceof IFolder) {
-				IFolder folder = (IFolder) firstResult;
-				text.setText(folder.getFullPath().toString());
-			} else {
-				errMsg.setText("aaa请选择正确的生成目录");
-			}
-
+		IJavaModel javaModel = JavaCore.create(ResourcesPlugin.getWorkspace()
+				.getRoot());
+		SelectTablePage tablePage = (SelectTablePage) this.getPreviousPage();
+		IJavaProject javaProject = javaModel.getJavaProject(tablePage.projectCombo.getText());
+		
+		SelectionDialog dialog = null;
+		try {
+			dialog = JavaUI.createPackageDialog(getShell(), javaProject,
+					IJavaElementSearchConstants.CONSIDER_REQUIRED_PROJECTS);
+			dialog.setTitle("Package Selection");
+			dialog.setMessage("Choose a folder");
+		} catch (JavaModelException e1) {
+			// ExceptionHandler.handleExceptionAndAbort(e1);
+		}
+		if (dialog.open() != Window.OK) {
+			return;
+		}
+		IPackageFragment pck = (IPackageFragment) dialog.getResult()[0];
+		if (pck != null) {
+			text.setText(pck.getResource().getFullPath().toString());
 		}
 	}
 }

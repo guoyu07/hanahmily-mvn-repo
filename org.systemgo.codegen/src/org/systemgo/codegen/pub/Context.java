@@ -11,7 +11,8 @@ import java.util.Properties;
  */
 public class Context {
 	public enum ContextType{
-		CURRENT_DB;
+		CURRENT_DB,
+		PROJECT;
 	};
 	public static Properties getContext(ContextType type){
 		return data.get(type);

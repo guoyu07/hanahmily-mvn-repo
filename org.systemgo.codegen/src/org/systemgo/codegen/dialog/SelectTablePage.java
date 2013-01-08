@@ -3,6 +3,9 @@ package org.systemgo.codegen.dialog;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -12,6 +15,7 @@ import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -25,7 +29,7 @@ public class SelectTablePage extends WizardPage {
 	private Table table;
 	private Button button;
 	private Label errMsg;
-	private TableColumn tableColumn_2;
+	protected Combo projectCombo;
 
 	/**
 	 * Create the wizard.
@@ -45,19 +49,20 @@ public class SelectTablePage extends WizardPage {
 		Composite container = new Composite(parent, SWT.NULL);
 
 		setControl(container);
-		container.setLayout(new GridLayout(3, false));
+		container.setLayout(new GridLayout(4, false));
 
 		text = new Text(container, SWT.BORDER);
 		GridData gd_text = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
-		gd_text.widthHint = 450;
+		gd_text.widthHint = 100;
 		text.setLayoutData(gd_text);
 
 		button = new Button(container, SWT.NONE);
 		button.setText("\u67E5\u8BE2");
 		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
 
 		table = new Table(container, SWT.BORDER | SWT.MULTI);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
@@ -74,7 +79,23 @@ public class SelectTablePage extends WizardPage {
 		errMsg.setFont(SWTResourceManager.getFont("Î¢ÈíÑÅºÚ", 9, SWT.NORMAL));
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
 
+		projectCombo = new Combo(container, SWT.NONE);
+		projectCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		projectCombo.setText("\u9009\u62E9\u76EE\u6807\u5DE5\u7A0B");
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
+		new Label(container, SWT.NONE);
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+		IProject jProject[] = root.getProjects();
+		for (IProject iJavaProject : jProject) {
+			projectCombo.add(iJavaProject.getProject().getName());
+		}
+		
 		this.makeListener();
 	}
 
@@ -98,39 +119,39 @@ public class SelectTablePage extends WizardPage {
 
 			}
 		});
-		
+
 		text.addTraverseListener(new TraverseListener() {
-			
+
 			@Override
 			public void keyTraversed(TraverseEvent e) {
-				if(e.detail == SWT.TRAVERSE_RETURN){
+				if (e.detail == SWT.TRAVERSE_RETURN) {
 					SelectTablePage.this.searchEvent();
 				}
 			}
 		});
-		
+
 		table.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseUp(MouseEvent e) {
 				if (table.getSelectionCount() > 0) {
 					SelectTablePage.this.setPageComplete(true);
-				}else{
+				} else {
 					SelectTablePage.this.setPageComplete(false);
 				}
-				
+
 			}
-			
+
 			@Override
 			public void mouseDown(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 	}
@@ -156,16 +177,16 @@ public class SelectTablePage extends WizardPage {
 
 	@Override
 	public boolean isPageComplete() {
-		if(table.getItemCount()<1){
-			return false;
-		}else{
-			return true;
-		}
+//		if (table.getItemCount() < 1) {
+//			return false;
+//		} else {
+//			return true;
+//		}
+		return true;
 	}
 
-	public String getSelectTableName(){
+	public String getSelectTableName() {
 		return table.getSelection()[0].getText(0);
 	}
-	
-	
+
 }
