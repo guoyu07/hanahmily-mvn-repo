@@ -51,10 +51,12 @@ public class Table {
 			listTable = qr
 					.query(conn,
 							"SELECT aa.table_name tableName,aa.tablespace_name  tablespaceName FROM all_tables aa where aa.owner = ? and aa.table_name like ? order by tablename",
-							rsh, prop.getProperty("username").toUpperCase(), "%" + tableName
-									+ "%");
+							rsh, prop.getProperty("username").toUpperCase(),
+							"%" + tableName + "%");
 		} catch (SQLException e) {
 			DbUtils.printStackTrace(e);
+		} finally {
+			DbUtils.closeQuietly(conn);
 		}
 
 		return listTable;

@@ -1,14 +1,13 @@
 ## template for dao
-package com.cattsoft.gms.bss.dao;
+package $daopackagename;
 
 import java.sql.*;
 import java.util.*;
 
-import com.cattsoft.mscrm.common.intercall.defaultImpl.AppException;
-import com.cattsoft.mscrm.common.intercall.defaultImpl.SysException;
-import com.cattsoft.mscrm.common.util.SqlStatement;
-import com.cattsoft.mscrm.common.util.StringUtil;
-import com.cattsoft.gms.bss.data.svo.*;
+import org.systemgo.devframework.database.statement.SqlStatement;
+import org.systemgo.devframework.util.StringUtil;
+import org.systemgo.devframework.util.exception.AppException;
+import org.systemgo.devframework.util.exception.SysException;
 
 #set ($lowertablename = $nameconverter.convert($tablename))
 #set ($uppertablename = $nameconverter.setUpperCaseForFirstLetter($lowertablename))

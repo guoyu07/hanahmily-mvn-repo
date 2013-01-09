@@ -55,7 +55,6 @@ public class CodeGenerator {
 		Template template = null;
 		NameConverter converter = NameConverter.getInstance();
 		try {
-			System.out.println(config.getProperty("outputpath"));
 			template = Velocity.getTemplate("VoTemplate.vm");
 			BufferedWriter writer = new BufferedWriter(
 					new FileWriter(
@@ -130,6 +129,8 @@ public class CodeGenerator {
 				.getProperty("batch").toLowerCase());
 		context.put("isNumeric", config.getProperty("isNumeric") == null ? "n"
 				: config.getProperty("isNumeric").toLowerCase());
+		context.put("vopackagename", config.getProperty("vopackagename"));
+		context.put("daopackagename", config.getProperty("daopackagename"));
 		return context;
 	}
 

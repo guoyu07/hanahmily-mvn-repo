@@ -1,16 +1,15 @@
 ## template for vo
-package com.cattsoft.gms.bss.data.svo;
+package $vopackagename;
 
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import com.cattsoft.mscrm.data.GenericVO;
-import com.cattsoft.mscrm.data.KeyValueBean;
+import org.systemgo.devframework.webpage.data.KeyValueBean;
 
 
 #set ($lowertablename = $nameconverter.convert($tablename))
 #set ($uppertablename = $nameconverter.setUpperCaseForFirstLetter($lowertablename))
-public class ${uppertablename}SVO extends GenericVO{
+public class ${uppertablename}SVO {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String TABLE_NAME = "$tablename";

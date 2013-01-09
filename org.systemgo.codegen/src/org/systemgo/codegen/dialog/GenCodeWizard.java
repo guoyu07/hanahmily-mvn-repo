@@ -42,6 +42,8 @@ public class GenCodeWizard extends Wizard {
 		prop.setProperty("batch", "Y");
 		prop.setProperty("isNumeric", configGenInfoPage.isNumbericBtn.isEnabled()?"Y":"N");
 
+		prop.put("vopackagename", configGenInfoPage.voPackage.toString());
+		prop.put("daopackagename", configGenInfoPage.daoPackage.toString());
 		CodeGenerator generator = new CodeGenerator();
 		generator.generate(prop);
 		return true;

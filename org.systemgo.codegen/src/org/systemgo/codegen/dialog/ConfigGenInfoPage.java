@@ -26,6 +26,8 @@ import org.eclipse.ui.dialogs.SelectionDialog;
 public class ConfigGenInfoPage extends WizardPage {
 	protected Text voPathText;
 	protected Text daoPathText;
+	protected StringBuilder voPackage = new StringBuilder();
+	protected StringBuilder daoPackage = new StringBuilder();
 	private Button selectVoPathBtn;
 	private Button selectDaoPathBtn;
 	protected Button isNumbericBtn;
@@ -53,21 +55,21 @@ public class ConfigGenInfoPage extends WizardPage {
 
 		setControl(container);
 		container.setLayout(new GridLayout(1, false));
-		
+
 		group = new Group(container, SWT.NONE);
 		group.setText("\u53C2\u6570\u8BBE\u7F6E");
 		group.setLayout(new GridLayout(2, false));
-				
+
 		isNumbericBtn = new Button(group, SWT.CHECK);
 		isNumbericBtn.setText("\u751F\u6210\u6570\u5B57\u7C7B\u578B");
-		
+
 		projectCombo = new Combo(group, SWT.NONE);
 		GridData gd_projectCombo = new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1);
 		gd_projectCombo.widthHint = 206;
 		projectCombo.setLayoutData(gd_projectCombo);
 		projectCombo.setText("\u9009\u62E9\u76EE\u6807\u5DE5\u7A0B");
-		
+
 		try {
 			IJavaProject jProject[] = javaModel.getJavaProjects();
 			for (IJavaProject iJavaProject : jProject) {
@@ -131,7 +133,7 @@ public class ConfigGenInfoPage extends WizardPage {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-				ConfigGenInfoPage.this.selectPathEvent(voPathText);
+				ConfigGenInfoPage.this.selectPathEvent(voPathText, voPackage);
 			}
 
 			@Override
@@ -150,7 +152,7 @@ public class ConfigGenInfoPage extends WizardPage {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-				ConfigGenInfoPage.this.selectPathEvent(daoPathText);
+				ConfigGenInfoPage.this.selectPathEvent(daoPathText,daoPackage);
 			}
 
 			@Override
@@ -168,9 +170,9 @@ public class ConfigGenInfoPage extends WizardPage {
 
 	}
 
-	private void selectPathEvent(Text text) {
-		IJavaProject javaProject = javaModel
-				.getJavaProject(projectCombo.getText());
+	private void selectPathEvent(Text text, StringBuilder packageBuilder) {
+		IJavaProject javaProject = javaModel.getJavaProject(projectCombo
+				.getText());
 
 		SelectionDialog dialog = null;
 		try {
@@ -187,6 +189,7 @@ public class ConfigGenInfoPage extends WizardPage {
 		IPackageFragment pck = (IPackageFragment) dialog.getResult()[0];
 		if (pck != null) {
 			text.setText(pck.getResource().getFullPath().toString());
+			packageBuilder.append(pck.getElementName());
 		}
 	}
 }
