@@ -1,11 +1,9 @@
 package org.systemgo.codegen.dialog;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -15,7 +13,6 @@ import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -29,7 +26,6 @@ public class SelectTablePage extends WizardPage {
 	private Table table;
 	private Button button;
 	private Label errMsg;
-	protected Combo projectCombo;
 
 	/**
 	 * Create the wizard.
@@ -81,21 +77,6 @@ public class SelectTablePage extends WizardPage {
 		new Label(container, SWT.NONE);
 		new Label(container, SWT.NONE);
 
-		projectCombo = new Combo(container, SWT.NONE);
-		projectCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		projectCombo.setText("\u9009\u62E9\u76EE\u6807\u5DE5\u7A0B");
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-		new Label(container, SWT.NONE);
-
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-
-		IProject jProject[] = root.getProjects();
-		for (IProject iJavaProject : jProject) {
-			projectCombo.add(iJavaProject.getProject().getName());
-		}
-		
 		this.makeListener();
 	}
 
@@ -182,10 +163,22 @@ public class SelectTablePage extends WizardPage {
 		} else {
 			return true;
 		}
+
 	}
 
 	public String getSelectTableName() {
-		return table.getSelection()[0].getText(0);
+		if (table.getSelectionCount() < 1) {
+			throw new InvalidParameterException();
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < table.getSelection().length; i++) {
+			TableItem item = table.getSelection()[i];
+			if (i > 0) {
+				sb.append(",");
+			}
+			sb.append(item.getText(0));
+		}
+		return sb.toString();
 	}
 
 }

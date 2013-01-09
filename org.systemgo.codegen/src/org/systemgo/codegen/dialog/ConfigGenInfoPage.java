@@ -16,21 +16,23 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.SelectionDialog;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ConfigGenInfoPage extends WizardPage {
 	protected Text voPathText;
 	protected Text daoPathText;
 	private Button selectVoPathBtn;
 	private Button selectDaoPathBtn;
-	private Label voErrMsg;
-	private Label daoErrMsg;
 	protected Button isNumbericBtn;
+	private Group group;
+	private Combo projectCombo;
+	private IJavaModel javaModel = JavaCore.create(ResourcesPlugin
+			.getWorkspace().getRoot());
 
 	/**
 	 * Create the wizard.
@@ -51,6 +53,29 @@ public class ConfigGenInfoPage extends WizardPage {
 
 		setControl(container);
 		container.setLayout(new GridLayout(1, false));
+		
+		group = new Group(container, SWT.NONE);
+		group.setText("\u53C2\u6570\u8BBE\u7F6E");
+		group.setLayout(new GridLayout(2, false));
+				
+		isNumbericBtn = new Button(group, SWT.CHECK);
+		isNumbericBtn.setText("\u751F\u6210\u6570\u5B57\u7C7B\u578B");
+		
+		projectCombo = new Combo(group, SWT.NONE);
+		GridData gd_projectCombo = new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1);
+		gd_projectCombo.widthHint = 206;
+		projectCombo.setLayoutData(gd_projectCombo);
+		projectCombo.setText("\u9009\u62E9\u76EE\u6807\u5DE5\u7A0B");
+		
+		try {
+			IJavaProject jProject[] = javaModel.getJavaProjects();
+			for (IJavaProject iJavaProject : jProject) {
+				projectCombo.add(iJavaProject.getProject().getName());
+			}
+		} catch (JavaModelException e) {
+			e.printStackTrace();
+		}
 
 		Group grpVo = new Group(container, SWT.NONE);
 		GridData gd_grpVo = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1,
@@ -74,16 +99,6 @@ public class ConfigGenInfoPage extends WizardPage {
 
 		selectVoPathBtn = new Button(grpVo, SWT.NONE);
 		selectVoPathBtn.setText("\u9009\u62E9");
-		new Label(grpVo, SWT.NONE);
-
-		voErrMsg = new Label(grpVo, SWT.NONE);
-		voErrMsg.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		new Label(grpVo, SWT.NONE);
-
-		isNumbericBtn = new Button(grpVo, SWT.CHECK);
-		isNumbericBtn.setText("\u751F\u6210\u6570\u5B57\u7C7B\u578B");
-		new Label(grpVo, SWT.NONE);
-		new Label(grpVo, SWT.NONE);
 
 		Group grpDao = new Group(container, SWT.NONE);
 		grpDao.setLayout(new GridLayout(3, false));
@@ -107,15 +122,6 @@ public class ConfigGenInfoPage extends WizardPage {
 
 		selectDaoPathBtn = new Button(grpDao, SWT.NONE);
 		selectDaoPathBtn.setText("\u9009\u62E9");
-		new Label(grpDao, SWT.NONE);
-
-		daoErrMsg = new Label(grpDao, SWT.NONE);
-		daoErrMsg.setForeground(SWTResourceManager.getColor(SWT.COLOR_RED));
-		new Label(grpDao, SWT.NONE);
-
-		new Label(grpDao, SWT.NONE);
-		new Label(grpDao, SWT.NONE);
-		new Label(grpDao, SWT.NONE);
 
 		this.makeListener();
 	}
@@ -125,7 +131,7 @@ public class ConfigGenInfoPage extends WizardPage {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-				ConfigGenInfoPage.this.selectPathEvent(voPathText, voErrMsg);
+				ConfigGenInfoPage.this.selectPathEvent(voPathText);
 			}
 
 			@Override
@@ -144,7 +150,7 @@ public class ConfigGenInfoPage extends WizardPage {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
-				ConfigGenInfoPage.this.selectPathEvent(daoPathText, daoErrMsg);
+				ConfigGenInfoPage.this.selectPathEvent(daoPathText);
 			}
 
 			@Override
@@ -162,12 +168,10 @@ public class ConfigGenInfoPage extends WizardPage {
 
 	}
 
-	private void selectPathEvent(Text text, Label errMsg) {
-		IJavaModel javaModel = JavaCore.create(ResourcesPlugin.getWorkspace()
-				.getRoot());
-		SelectTablePage tablePage = (SelectTablePage) this.getPreviousPage();
-		IJavaProject javaProject = javaModel.getJavaProject(tablePage.projectCombo.getText());
-		
+	private void selectPathEvent(Text text) {
+		IJavaProject javaProject = javaModel
+				.getJavaProject(projectCombo.getText());
+
 		SelectionDialog dialog = null;
 		try {
 			dialog = JavaUI.createPackageDialog(getShell(), javaProject,

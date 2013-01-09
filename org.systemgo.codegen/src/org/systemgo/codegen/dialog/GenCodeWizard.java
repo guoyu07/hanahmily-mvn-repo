@@ -37,8 +37,8 @@ public class GenCodeWizard extends Wizard {
 		prop.setProperty("outputpath", Platform.getInstanceLocation().getURL().getPath());
 		prop.setProperty("vopackage", configGenInfoPage.voPathText.getText()+"/");
 		prop.setProperty("daopackage", configGenInfoPage.daoPathText.getText()+"/");
-
 		prop.setProperty("tablenames", selectTablePage.getSelectTableName());
+		
 		prop.setProperty("batch", "Y");
 		prop.setProperty("isNumeric", configGenInfoPage.isNumbericBtn.isEnabled()?"Y":"N");
 

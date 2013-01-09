@@ -8,13 +8,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.systemgo.codegen.pub.Context;
 import org.systemgo.codegen.pub.DbUtil;
 import org.systemgo.codegen.pub.TypeConverter;
+import org.systemgo.codegen.pub.Context.ContextType;
 
 public class Table {
 	private String tableName;
@@ -43,11 +46,13 @@ public class Table {
 				Table.class);
 		QueryRunner qr = new QueryRunner();
 		List<Table> listTable = null;
+		Properties prop = Context.getContext(ContextType.CURRENT_DB);
 		try {
 			listTable = qr
 					.query(conn,
-							"SELECT aa.table_name tableName,aa.tablespace_name  tablespaceName FROM all_tables aa where aa.owner = 'DEVFRAMEWORK' and aa.table_name like ?",
-							rsh, tableName + "%");
+							"SELECT aa.table_name tableName,aa.tablespace_name  tablespaceName FROM all_tables aa where aa.owner = ? and aa.table_name like ? order by tablename",
+							rsh, prop.getProperty("username").toUpperCase(), "%" + tableName
+									+ "%");
 		} catch (SQLException e) {
 			DbUtils.printStackTrace(e);
 		}

@@ -24,9 +24,11 @@ public class ConfigFile {
 			+ ".metadata/.plugins/" + Activator.PLUGIN_ID;
 
 	private final static String DB_CONF_DIR = "/db";
+	
+	private final static String ROOT_DIR = "/";
 
 	public enum ConfigType {
-		DATABASE(DB_CONF_DIR);
+		DATABASE(DB_CONF_DIR),ROOT(ROOT_DIR);
 
 		private String dir;
 

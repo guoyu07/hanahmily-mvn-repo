@@ -122,6 +122,7 @@ public class CodeGenerator {
 		context.put("isLog", "N");
 		context.put("tablename", tableName.toUpperCase());
 		List<Column> columns = Table.getColumns(tableName);
+		
 		context.put("columns", columns);
 		context.put("insertsql", getDefaultInsertString(columns));
 		context.put("selectsql", getDefaultSelectString(columns));
