@@ -37,13 +37,13 @@ public class GenCodeWizard extends Wizard {
 		prop.setProperty("outputpath", Platform.getInstanceLocation().getURL().getPath());
 		prop.setProperty("vopackage", configGenInfoPage.voPathText.getText()+"/");
 		prop.setProperty("daopackage", configGenInfoPage.daoPathText.getText()+"/");
-		prop.setProperty("tablenames", selectTablePage.getSelectTableName());
+		prop.setProperty("tablenames", selectTablePage.getTargetTableName());
 		
 		prop.setProperty("batch", "Y");
 		prop.setProperty("isNumeric", configGenInfoPage.isNumbericBtn.isEnabled()?"Y":"N");
 
-		prop.put("vopackagename", configGenInfoPage.voPackage.toString());
-		prop.put("daopackagename", configGenInfoPage.daoPackage.toString());
+		prop.put("vopackagename", configGenInfoPage.voPackageText.getText());
+		prop.put("daopackagename", configGenInfoPage.daoPackageText.getText());
 		CodeGenerator generator = new CodeGenerator();
 		generator.generate(prop);
 		return true;

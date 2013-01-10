@@ -11,6 +11,8 @@ import org.systemgo.devframework.util.exception.SysException;
 
 #set ($lowertablename = $nameconverter.convert($tablename))
 #set ($uppertablename = $nameconverter.setUpperCaseForFirstLetter($lowertablename))
+import $vopackagename.${uppertablename}SVO;
+
 public class ${uppertablename}SDAO {
 
 	public void add(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {

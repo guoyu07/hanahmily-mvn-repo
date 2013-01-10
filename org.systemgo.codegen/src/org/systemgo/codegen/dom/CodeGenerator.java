@@ -59,8 +59,7 @@ public class CodeGenerator {
 			BufferedWriter writer = new BufferedWriter(
 					new FileWriter(
 							new File(
-									config.getProperty("outputpath")
-											+ config.getProperty("vopackage")
+									config.getProperty("vopackage")
 											+ converter
 													.setUpperCaseForFirstLetter(converter
 															.convert((String) context
@@ -90,8 +89,7 @@ public class CodeGenerator {
 			BufferedWriter writer = new BufferedWriter(
 					new FileWriter(
 							new File(
-									config.get("outputpath")
-											+ config.getProperty("daopackage")
+									config.getProperty("daopackage")
 											+ converter
 													.setUpperCaseForFirstLetter(converter
 															.convert((String) context
@@ -121,7 +119,7 @@ public class CodeGenerator {
 		context.put("isLog", "N");
 		context.put("tablename", tableName.toUpperCase());
 		List<Column> columns = Table.getColumns(tableName);
-		
+
 		context.put("columns", columns);
 		context.put("insertsql", getDefaultInsertString(columns));
 		context.put("selectsql", getDefaultSelectString(columns));
