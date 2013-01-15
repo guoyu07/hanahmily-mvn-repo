@@ -1,10 +1,11 @@
-package org.systemgo.codegen.dialog;
+package org.systemgo.codegen.dialog.vodaogen;
 
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.wizard.Wizard;
+import org.systemgo.codegen.dialog.SelectTablePage;
 import org.systemgo.codegen.dom.CodeGenerator;
 
 public class GenCodeWizard extends Wizard {

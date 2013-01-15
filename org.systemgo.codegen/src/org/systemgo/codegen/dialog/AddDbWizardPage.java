@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
+import org.systemgo.codegen.dialog.adddb.AddDatabaseDialogData;
 
 public class AddDbWizardPage extends WizardPage {
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
    <extension
          point="org.eclipse.ui.views">
       <category
@@ -14,6 +13,11 @@
             category="org.systemgo.codegen"
             class="org.systemgo.codegen.views.DatabaseView"
             id="org.systemgo.codegen.views.DatabaseView">
+      </view>
+      <view
+            class="org.systemgo.codegen.views.test"
+            id="org.systemgo.codegen.views.test"
+            name="New ViewPart">
       </view>
    </extension>
    <extension

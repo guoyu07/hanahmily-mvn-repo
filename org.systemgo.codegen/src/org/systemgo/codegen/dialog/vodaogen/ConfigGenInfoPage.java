@@ -1,4 +1,4 @@
-package org.systemgo.codegen.dialog;
+package org.systemgo.codegen.dialog.vodaogen;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaModel;

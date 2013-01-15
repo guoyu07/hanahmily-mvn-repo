@@ -2,8 +2,6 @@
 package $vopackagename;
 
 import java.sql.*;
-import java.util.List;
-import java.util.ArrayList;
 
 #set ($lowertablename = $nameconverter.convert($tablename))
 #set ($uppertablename = $nameconverter.setUpperCaseForFirstLetter($lowertablename))

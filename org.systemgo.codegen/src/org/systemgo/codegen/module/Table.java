@@ -95,6 +95,7 @@ public class Table {
 				if (ResultSetMetaData.columnNoNulls == rsmd.isNullable(i)) {
 					column.setNullable(false);
 				}
+				column.setPrecision(rsmd.getPrecision(i));
 				columns.add(column);
 			}
 		} catch (SQLException e) {

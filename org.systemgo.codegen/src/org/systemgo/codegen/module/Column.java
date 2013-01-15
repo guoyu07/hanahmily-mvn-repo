@@ -13,6 +13,9 @@ public class Column {
 
     // java数据类型，如Date,String
     private String type;
+    
+    // 精度
+    private Integer precision;
 
     // 是否是主键
     private boolean pk = false;
@@ -73,4 +76,12 @@ public class Column {
     public void setNumeric(boolean numeric) {
         this.numeric = numeric;
     }
+
+	public Integer getPrecision() {
+		return precision;
+	}
+
+	public void setPrecision(Integer precision) {
+		this.precision = precision;
+	}
 }

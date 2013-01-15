@@ -37,7 +37,7 @@ public class SelectTablePage extends WizardPage {
 	private Table sourceTable;
 	private Button button;
 	private Label errMsg;
-	private Table targetTable;
+	protected Table targetTable;
 	private TableColumn tableColumn_2;
 	private DragSource dragSource;
 	private DropTarget dropTarget;

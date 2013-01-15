@@ -1,8 +1,9 @@
-package org.systemgo.codegen.dialog;
+package org.systemgo.codegen.dialog.adddb;
 
 import java.util.Properties;
 
 import org.eclipse.jface.wizard.Wizard;
+import org.systemgo.codegen.dialog.AddDbWizardPage;
 import org.systemgo.codegen.dom.ConfigFile;
 import org.systemgo.codegen.dom.ConfigFile.ConfigType;
 

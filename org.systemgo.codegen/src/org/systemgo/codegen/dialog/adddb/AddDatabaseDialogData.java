@@ -1,4 +1,4 @@
-package org.systemgo.codegen.dialog;
+package org.systemgo.codegen.dialog.adddb;
 
 import java.util.Properties;
 
