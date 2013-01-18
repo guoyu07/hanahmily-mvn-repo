@@ -70,7 +70,10 @@ public class ConfigFile {
 		if (file == null) {
 			file = new File(type.getDir() + "/" + name);
 			try {
-				properties.store(new FileWriter(file), name);
+				FileWriter writer = new FileWriter(file);
+				properties.store(writer, name);
+				writer.flush();
+				writer.close();
 			} catch (IOException e) {
 				throw new RuntimeException("±£¥Ê≈‰÷√Œƒº˛ ß∞‹");
 			}

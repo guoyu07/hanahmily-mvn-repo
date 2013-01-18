@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.systemgo.codegen.dom.ConfigFile;
+import org.systemgo.codegen.views.DatabaseView;
 
 /**
  * 删除数据库事件
@@ -19,9 +19,9 @@ import org.systemgo.codegen.dom.ConfigFile;
 public class DelDataBaseAction extends Action {
 
 	
-	public DelDataBaseAction(TableViewer viewer, ConfigFile dbConfig) {
+	public DelDataBaseAction(TableViewer viewer, DatabaseView databaseView) {
 		this.viewer = viewer;
-		this.dbConfig = dbConfig;
+		this.databaseView = databaseView;
 		this.setText("删除数据库");
 		this.setToolTipText("删除一个数据库");
 		this.setImageDescriptor(PlatformUI.getWorkbench()
@@ -30,7 +30,7 @@ public class DelDataBaseAction extends Action {
 	}
 
 	private TableViewer viewer;
-	private ConfigFile dbConfig;
+	private DatabaseView databaseView;
 
 	public void run() {
 		TableItem[] tableItem = viewer.getTable().getSelection();
@@ -41,7 +41,7 @@ public class DelDataBaseAction extends Action {
 			if (SWT.YES == md.open()) {
 				for (int i = 0; i < tableItem.length; i++) {
 					String name = tableItem[i].getText();
-					dbConfig.delConfig(name);
+					databaseView.getDbConfig().delConfig(name);
 				}
 			}
 		}

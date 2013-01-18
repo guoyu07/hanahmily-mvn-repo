@@ -58,12 +58,11 @@ public class DatabaseView extends ViewPart {
 	 * 生成代码事件
 	 */
 	private Action genCodeAction;
-	
+
 	/**
 	 * 生成控制文件事件
 	 */
 	private Action genCtlAction;
-
 
 	private Composite parent;
 
@@ -140,14 +139,14 @@ public class DatabaseView extends ViewPart {
 		viewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuMgr, viewer);
 	}
-	
+
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(genCodeAction);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 		manager.add(genCtlAction);
 	}
-	
+
 	private void initConfig() {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
 				| SWT.V_SCROLL);
@@ -164,13 +163,13 @@ public class DatabaseView extends ViewPart {
 		addDatabaseAction = new AddDataBaseAction(viewer);
 
 		// 删除数据库行为
-		delDatabaseAction = new DelDataBaseAction(viewer, dbConfig);
+		delDatabaseAction = new DelDataBaseAction(viewer, this);
 
 		// 生成代码事件
-		genCodeAction = new DaoVoCodegenAction(viewer, dbConfig);
-		
+		genCodeAction = new DaoVoCodegenAction(viewer, this);
+
 		// 生成代码控制文件
-		genCtlAction = new SqloaderCtlFilegenAction(viewer, dbConfig);
+		genCtlAction = new SqloaderCtlFilegenAction(viewer, this);
 	}
 
 	/**
@@ -212,6 +211,10 @@ public class DatabaseView extends ViewPart {
 	private void fillLocalToolBar(IToolBarManager toolBarManager) {
 		toolBarManager.add(addDatabaseAction);
 		toolBarManager.add(delDatabaseAction);
+	}
+
+	public ConfigFile getDbConfig() {
+		return dbConfig;
 	}
 
 	/**
