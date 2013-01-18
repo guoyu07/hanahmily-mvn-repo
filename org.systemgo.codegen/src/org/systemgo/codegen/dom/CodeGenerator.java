@@ -47,7 +47,39 @@ public class CodeGenerator {
 			VelocityContext context = getContext(config, tableNames.get(i));
 			generateVo(config, context);
 			generateDao(config, context);
+			if("true".equals(config.getProperty("isGenCache"))){
+				generateCacheDao(config, context);
+			}
 		}
+	}
+
+	private void generateCacheDao(Properties config, VelocityContext context) {
+		Template template = null;
+		NameConverter converter = NameConverter.getInstance();
+		try {
+			template = Velocity.getTemplate("CacheDaoTemplate.vm");
+			BufferedWriter writer = new BufferedWriter(
+					new FileWriter(
+							new File(
+									config.getProperty("daopackage")
+											+ converter
+													.setUpperCaseForFirstLetter(converter
+															.convert((String) context
+																	.get("tablename")))
+											+ "SCDAO.java")));
+			if (template != null) {
+				template.merge(context, writer);
+			}
+			writer.flush();
+			writer.close();
+		} catch (ResourceNotFoundException e) {
+			System.out.println("cannot find template " + "CacheDaoTemplate.vm");
+		} catch (ParseErrorException e) {
+			System.out.println("Syntax error in template : " + e);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/* generate vo class */

@@ -38,6 +38,7 @@ public class ConfigGenInfoPage extends WizardPage {
 	private Label label_3;
 	protected Text daoPackageText;
 	private Label label_4;
+	protected Button cacheCheckButton;
 
 	/**
 	 * Create the wizard.
@@ -68,7 +69,9 @@ public class ConfigGenInfoPage extends WizardPage {
 
 		isNumbericBtn = new Button(group, SWT.CHECK);
 		isNumbericBtn.setText("\u751F\u6210\u6570\u5B57\u7C7B\u578B");
-		new Label(group, SWT.NONE);
+		
+		cacheCheckButton = new Button(group, SWT.CHECK);
+		cacheCheckButton.setText("\u751F\u6210\u7F13\u5B58DAO");
 		
 		label_4 = new Label(group, SWT.NONE);
 		label_4.setText("\u76EE\u6807\u5DE5\u7A0B\uFF1A");

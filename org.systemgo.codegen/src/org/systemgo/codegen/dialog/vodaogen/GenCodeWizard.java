@@ -41,10 +41,11 @@ public class GenCodeWizard extends Wizard {
 		prop.setProperty("tablenames", selectTablePage.getTargetTableName());
 		
 		prop.setProperty("batch", "Y");
-		prop.setProperty("isNumeric", configGenInfoPage.isNumbericBtn.isEnabled()?"Y":"N");
+		prop.setProperty("isNumeric", configGenInfoPage.isNumbericBtn.getSelection()?"Y":"N");
 
 		prop.put("vopackagename", configGenInfoPage.voPackageText.getText());
 		prop.put("daopackagename", configGenInfoPage.daoPackageText.getText());
+		prop.put("isGenCache", String.valueOf(configGenInfoPage.cacheCheckButton.getSelection()));
 		CodeGenerator generator = new CodeGenerator();
 		generator.generate(prop);
 		return true;

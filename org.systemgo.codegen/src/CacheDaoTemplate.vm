@@ -1,0 +1,85 @@
+## template for dao
+package $daopackagename;
+
+import static org.systemgo.devframework.component.cache.CacheReader.newCacheReader;
+
+import java.util.*;
+
+import org.systemgo.devframework.component.cache.CacheReader;
+import org.systemgo.devframework.component.cache.ReadResultRow;
+import org.systemgo.devframework.node.stub.RemoteNodeConfig;
+import org.systemgo.devframework.util.CollectionUtil;
+import org.systemgo.devframework.util.StringUtil;
+import org.systemgo.devframework.util.exception.AppException;
+import org.systemgo.devframework.util.exception.SysException;
+
+#set ($lowertablename = $nameconverter.convert($tablename))
+#set ($uppertablename = $nameconverter.setUpperCaseForFirstLetter($lowertablename))
+import $vopackagename.${uppertablename}SVO;
+
+public class ${uppertablename}SCDAO {
+
+	public ${uppertablename}SVO findByPK(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {
+		CacheReader reader = newCacheReader("${tablename}",
+					RemoteNodeConfig.getNodeConfig("CacheDistributedNodeServer"));
+#foreach ($column in $columns)
+#if ($column.pk)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+		reader.appendCondition("${column.name}", ${lowertablename}.get${upper}());
+#end
+#end
+		return this.convertToVO(reader.read());
+	}
+
+	public List<${uppertablename}SVO> findByVO(${uppertablename}SVO ${lowertablename}) throws AppException, SysException {
+		CacheReader reader = newCacheReader("${tablename}",
+						RemoteNodeConfig.getNodeConfig("CacheDistributedNodeServer"));
+#foreach ($column in $columns)
+#if ("Timestamp" != ${column.type})
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+		if (!StringUtil.isBlank(${lowertablename}.get${upper}())) {
+			reader.appendCondition("${column.name}", ${lowertablename}.get${upper}());
+		}
+#end
+#end
+		return this.convertToList(reader.read());
+	}
+
+
+	private void convert(${uppertablename}SVO vo, ReadResultRow row) throws SysException, AppException {
+#foreach ($column in $columns)
+#set ($lower = $nameconverter.convert($column.name))
+#set ($upper = $nameconverter.setUpperCaseForFirstLetter($lower))
+#if ("Timestamp" != ${column.type})
+			vo.set${upper}(row.getData("${column.name}"));
+#end
+#end
+	}
+	
+	private ${uppertablename}SVO convertToVO(List<ReadResultRow> rows) throws SysException, AppException {
+		if (rows.size() > 1) {
+			throw new AppException("${tablename} too many data");
+		}
+		${uppertablename}SVO vo = null;
+		if (!CollectionUtil.isEmpty(rows)) {
+			vo = new ${uppertablename}SVO();
+			this.convert(vo, rows.get(0));
+		}
+		return vo;
+	}
+	
+	private List<${uppertablename}SVO> convertToList(List<ReadResultRow> rows) throws SysException, AppException {
+		List<${uppertablename}SVO> list = new ArrayList<${uppertablename}SVO>();
+		if (!CollectionUtil.isEmpty(rows)) {
+			for (ReadResultRow readResultRow : rows) {
+				${uppertablename}SVO vo = new ${uppertablename}SVO();
+				this.convert(vo, readResultRow);
+				list.add(vo);
+			}
+		}
+		return list.size() == 0 ? null : list;
+	}
+
+}
